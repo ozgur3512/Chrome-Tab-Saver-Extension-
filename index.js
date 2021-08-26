@@ -12,9 +12,11 @@ const ulEl=document.getElementById("ul-el")
 const groupEl=document.getElementById("new-group")
 const Ingroup=document.getElementById("groups")
 const inputEl=document.getElementById("input-el-gr")
+const inputElNormal=document.getElementById("input-el")
 const miningEl=document.getElementById("mining-el")
 const deleteEl=document.getElementById("delete-tab")
 const clear=document.getElementById("clear-all-data")
+const error_mes=document.getElementById("Error")
 
 const leadsFromLocalStorage = JSON.parse( localStorage.getItem("myLeads") )
 const leadsFromLocalStorage2 = JSON.parse( localStorage.getItem("button") )
@@ -39,7 +41,33 @@ if(leadsFromLocalStorage3){
     RenderGroupButton()
 }
 
+inputElNormal.addEventListener("keypress",function(e){
+    x=0
+    for(let i=0;i<inputElNormal.value.length;i++){
+        if(inputElNormal.value[i]==="."){
+            x+=1
+        }
+    }
 
+    if (e.key === 'Enter' && x>0) {
+        ulEl.innerHTML=
+        `
+        <li>
+        <a target="_blank" href=${inputElNormal.value}>${inputElNormal.value}}</a>
+        <hr>
+        </li>
+        `
+        
+        tabArray.push(inputElNormal.value)
+        render()
+        inputElNormal.value=""
+    }
+})
+inputElNormal.addEventListener("click",function(e){
+    if(inputElNormal.value==="You can type your web page and hit enter to save..."){
+        inputElNormal.value=""
+    }
+})
 socialEl.addEventListener("click",function(){
     for(let i=0;i<socailmed.length;i++){
         window.open(socailmed[i],"_blank")
@@ -61,7 +89,7 @@ miningEl.addEventListener("click",function(){
     }
     
 })
-console.log(leadsFromLocalStorage3)
+
 mailEl.addEventListener("click",function(){
     for(let i=0;i<mailarr.length;i++){
         
@@ -85,34 +113,44 @@ saveEl.addEventListener("click", function(){
 
 
 groupEl.addEventListener("dblclick",function(){
-    
-    if(!(inputEl.value=="") && tabArray){
-    Ingroup.innerHTML+=`
-    <button id=${inputEl.value} >${inputEl.value}</button>
-    `
-    if(JSON.parse(localStorage.getItem("values"))){
-        idArray=JSON.parse(localStorage.getItem("values"))
-        idArray.push(inputEl.value)
-        localStorage.setItem("values",JSON.stringify(idArray))
+    x=0
+   for(let i=0;i<inputEl.value.length;i++){
+       if(inputEl.value[i]===" "){
+           x+=1
+       }
+   }
+   if(x===0){
+        if(!(inputEl.value=="") && tabArray){
+            Ingroup.innerHTML+=`
+            <button id=${inputEl.value} >${inputEl.value}</button>
+            `
+                if(JSON.parse(localStorage.getItem("values"))){
+                    idArray=JSON.parse(localStorage.getItem("values"))
+                    idArray.push(inputEl.value)
+                    localStorage.setItem("values",JSON.stringify(idArray))
+                }
+                else{
+                idArray.push(inputEl.value)
+                localStorage.setItem("values",JSON.stringify(idArray))
+                }
+            localStorage.setItem(inputEl.value,JSON.stringify(tabArray))
+            
+            tabArray=[]
+            ulEl.innerHTML=""
+            localStorage.removeItem("myLeads")
+        
+        
+            buttonArray.push("<button id="+inputEl.value+">"+inputEl.value+"</button>")
+            localStorage.setItem("button",JSON.stringify(buttonArray))
+            RenderGroupButton()
+            error_mes.textContent=""
+        
+        }
+
     }
     else{
-    idArray.push(inputEl.value)
-    localStorage.setItem("values",JSON.stringify(idArray))
+        error_mes.textContent="Please enter group name without spaces or use '_' instead"
     }
-    localStorage.setItem(inputEl.value,JSON.stringify(tabArray))
-    
-    tabArray=[]
-    ulEl.innerHTML=""
-    localStorage.removeItem("myLeads")
- 
-   
-    buttonArray.push("<button id="+inputEl.value+">"+inputEl.value+"</button>")
-    localStorage.setItem("button",JSON.stringify(buttonArray))
-    RenderGroupButton()
-    
-    }
-
-    
    
 
 })
@@ -125,6 +163,7 @@ function render(){
         `
         <li>
         <a target="_blank" href=${tabArray[i]}>${tabArray[i]}</a>
+        <hr>
         </li>
         `
         
