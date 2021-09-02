@@ -16,4 +16,9 @@ The group limit may increase depending on the updates.
 -Changed the style of app
 -Added new feature: You can now copy and paste or type your webpage and hit enter to save it into saved tabs.
 
+---Version 2.2----
+-Fixed  bugs
+-Changed the style of app
+-Added info when hovered onto buttons
+
 Link for the extension :https://chrome.google.com/webstore/detail/chrome-state-saver/pinhflafajhafecplnpghnkolbmihbdm?hl=en&authuser=1
